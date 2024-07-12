@@ -46,16 +46,18 @@ public:
         }
     }
 
-    void AddProcessor( Pipe::ProcessorFunc processor, int outputBufferSize = -1 ) {
-        //Create new buffers
+    StatusCode AddProcessor( Pipe::ProcessorFunc processor, int outputBufferSize = -1 ) {
+        //Check input buffer - if it is reason to continue
         ByteArray* inputBuffer  = buffers.back();
+        if ( ( nullptr == inputBuffer ) || ( nullptr == inputBuffer->data() ) ) {
+            return StatusCode::ERROR;
+        }
+
+        //Create new buffer
         ByteArray* outputBuffer = new ByteArray( ( outputBufferSize < 1 ) ? defaultBufferSize : outputBufferSize );
 
-        if ( outputBuffer ) {;} else {
-            printf("Zero ByteArray!\r\n");
-        }
-        if ( outputBuffer->data() ) {;} else {
-            printf("Zero data ptr!\r\n");
+        if ( ( nullptr == outputBuffer ) || ( nullptr == outputBuffer->data() ) ) {
+            return StatusCode::ERROR;
         }
 
         //Add the output buffer to the buffers list
@@ -63,7 +65,13 @@ public:
 
         //Create a new Pipe with these buffers
         Pipe* newPipe           = new Pipe( inputBuffer, outputBuffer, processor );
+        if ( nullptr == newPipe ) {
+            return StatusCode::ERROR;
+        }
+
         pipes.push_back( newPipe );
+
+        return StatusCode::OK;
 
     }
 

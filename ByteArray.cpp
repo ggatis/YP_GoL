@@ -237,8 +237,6 @@ ByteArray::extendo( void ) {
     if ( _data ) {
         _count = _size;
     }
-    printf("extendo dataptr, count, size: %08X, %d, %d\r\n",
-        (uint32_t)_data, _count, _size );
 }
 
 /**
@@ -339,7 +337,6 @@ ByteArray::peek( int x, int y, int width, int height ) const {
             }
         }
     }
-    printf("-");
     return 0;
 }
 
@@ -362,15 +359,9 @@ ByteArray::poke( uint8_t aByte, int x, int y, int width, int height ) {
             if ( offset < _count ) {
                 _data[offset] = aByte;
                 return 0;
-            } else {
-                printf("poke ptr, offset, count, size: %08X, %d, %d, %d\r\n",
-                    (uint32_t)_data, offset, _count, _size );
-                return 255;
             }
         }
     }
-    printf("+");
-    printf("x, y, w, h: %d, %d, %d, %d\r\n", x, y, width, height );
     return 255;
 }
 

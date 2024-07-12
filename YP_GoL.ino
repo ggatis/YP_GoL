@@ -1,8 +1,8 @@
 #include "YP_GoL.h"
 
 //GoL globals
-volatile int width   = 10;
-volatile int height  = 10;
+volatile int width   = 12;
+volatile int height  = 12;
 
 
 #include <stdint.h>
@@ -134,34 +134,13 @@ void setupObjects() {
     pProcessors = new Processors( width * height );
 
     //Add a GoL processor to the Processors list
-    //pProcessors->AddProcessor( reverse_processor );
     pProcessors->AddProcessor( GoL );
 
-    printf("Frontend dataptr, count, size: %08X, %d, %d\r\n",
-        (uint32_t)pProcessors->getFrontEnd()->data(),
-        pProcessors->getFrontEnd()->count(),
-        pProcessors->getFrontEnd()->size() );
-    printf("Backend  dataptr, count, size: %08X, %d, %d\r\n",
-        (uint32_t)pProcessors->getBackEnd()->data(),
-        pProcessors->getBackEnd()->count(),
-        pProcessors->getBackEnd()->size() );
-
+    //init GoL
     GoLinit( pProcessors->getFrontEnd(), pProcessors->getBackEnd() );
 
-    printf("Frontend dataptr, count, size: %08X, %d, %d\r\n",
-        (uint32_t)pProcessors->getFrontEnd()->data(),
-        pProcessors->getFrontEnd()->count(),
-        pProcessors->getFrontEnd()->size() );
-    printf("Backend  dataptr, count, size: %08X, %d, %d\r\n",
-        (uint32_t)pProcessors->getBackEnd()->data(),
-        pProcessors->getBackEnd()->count(),
-        pProcessors->getBackEnd()->size() );
-
-    printf("The initial state:\r\n");
-    printf("FE:\r\n");
-    pProcessors->getFrontEnd()->print2Dd( width, height );
-    printf("BE:\r\n");
-    pProcessors->getBackEnd()->print2Dd( width, height );
+    printf("Iteration [0]\r\n");
+    pProcessors->getFrontEnd()->print2D( width, height );
 
 }
 
@@ -171,30 +150,16 @@ void setup( void ) {
   
   setupPins();
   setupSerials();
+
+  printf("\r\nYP_GoL\r\n");
+
+  Serial1.write("Serial1\r\n");
+  Serial2.write("Serial2\r\n");
+
   //setupTimers();
   setupObjects();
   //setup mySysTick
   mySysTick = HAL_GetTick();
-
-  //debug-vvv
-  //printf("pInput len and data: %d, \"", pInput_data->count() );
-  //pInput_data->print();
-  //printf("\"\r\n");
-  //debug-^^^
-  printf("Frontend dataptr, count, size: %08X, %d, %d\r\n",
-      (uint32_t)pProcessors->getFrontEnd()->data(),
-      pProcessors->getFrontEnd()->count(),
-      pProcessors->getFrontEnd()->size() );
-  printf("Backend  dataptr, count, size: %08X, %d, %d\r\n",
-      (uint32_t)pProcessors->getBackEnd()->data(),
-      pProcessors->getBackEnd()->count(),
-      pProcessors->getBackEnd()->size() );
-
-  printf("\r\nYP_GoL\r\n");
-  
-  //printUsage();
-  Serial1.write("Serial1\r\n");
-  Serial2.write("Serial2\r\n");
 
 }
 
@@ -210,51 +175,16 @@ void clean() {
 /*********************************************************************/
 void loop() {
 
-    mySysTick += 1000;
-    while ( HAL_GetTick() < ( mySysTick - 100 ) ) {;};
+    mySysTick += 250;
+    while ( HAL_GetTick() < ( mySysTick - 50 ) ) {;};
     LEDon();
 
-    Iteration++;
-    printf("Iteration [%d]\r\n", Iteration );
+    printf("Iteration [%d]\r\n", ++Iteration );
     
-    printf("Before\r\n");
-
-    //printf("Input\r\n");
-    printf("Frontend dataptr, count, size: %08X, %d, %d\r\n",
-        (uint32_t)pProcessors->getFrontEnd()->data(),
-        pProcessors->getFrontEnd()->count(),
-        pProcessors->getFrontEnd()->size() );
-    pProcessors->getFrontEnd()->print2Dd( width, height );
-
-    //printf("Output\r\n");
-    printf("Backend  dataptr, count, size: %08X, %d, %d\r\n",
-        (uint32_t)pProcessors->getBackEnd()->data(),
-        pProcessors->getBackEnd()->count(),
-        pProcessors->getBackEnd()->size() );
-    pProcessors->getBackEnd()->print2Dd( width, height );
-
     if ( StatusCode::OK == pProcessors->processAll() ) {
-
-        printf("After\r\n");
-
-        //printf("Input\r\n");
-        printf("Frontend dataptr, count, size: %08X, %d, %d\r\n",
-            (uint32_t)pProcessors->getFrontEnd()->data(),
-            pProcessors->getFrontEnd()->count(),
-            pProcessors->getFrontEnd()->size() );
-        pProcessors->getFrontEnd()->print2Dd( width, height );
-
-        //printf("Output\r\n");
-        printf("Backend  dataptr, count, size: %08X, %d, %d\r\n",
-            (uint32_t)pProcessors->getBackEnd()->data(),
-            pProcessors->getBackEnd()->count(),
-            pProcessors->getBackEnd()->size() );
-        pProcessors->getBackEnd()->print2Dd( width, height );
-
+        pProcessors->getBackEnd()->print2D( width, height );
     } else {
-
         printf("Processing failed in pipe: %d.\r\n", pProcessors->getFaultyPipe() );
-
     }
     pProcessors->swapIO();
 
