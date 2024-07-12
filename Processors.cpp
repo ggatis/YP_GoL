@@ -57,12 +57,12 @@ StatusCode GoL( ByteArray* pIn, ByteArray* pOut ) {
     for ( int y = 0; y < height; y++ ) {
         for ( int x = 0; x < width; x++ ) {
 
-            printf("w, h: %d, %d,", width, height );
-            printf(" %2d, %2d", x, y );
+            //printf("w, h: %d, %d,", width, height );
+            //printf(" %2d, %2d", x, y );
 
             uint8_t currentState = decode( pIn->peek( x, y, width, height ) );
 
-            printf(", %1d", currentState );
+            //printf(", %1d", currentState );
 
             int liveNeighbors = -currentState;
             for ( int dy = -1; dy <= 1; ++dy ) {
@@ -77,7 +77,7 @@ StatusCode GoL( ByteArray* pIn, ByteArray* pOut ) {
                 }
             }
 
-            printf(", %1d", liveNeighbors );
+            //printf(", %1d", liveNeighbors );
 
             uint8_t newState = 0;
             if ( currentState == 1 ) {
@@ -86,11 +86,11 @@ StatusCode GoL( ByteArray* pIn, ByteArray* pOut ) {
                 newState = ( liveNeighbors == 3 ) ? 1 : 0;
             }
 
-            printf(", %1d", newState );
+            //printf(", %1d", newState );
 
             pOut->poke( encode( newState ), x, y, width, height );
 
-            printf("\r\n");
+            //printf("\r\n");
         
         }
 
