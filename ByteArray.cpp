@@ -33,8 +33,8 @@ ByteArray::ByteArray( void ) :
   *
   * @param  buffersize  buffer size
  */
-ByteArray::ByteArray( uint16_t buffersize ) :
-    _size( buffersize ), _count( 0 ), _data( new uint8_t[(size_t)buffersize] ) {
+ByteArray::ByteArray( uint16_t size ) :
+    _size( size ), _count( 0 ), _data( new uint8_t[(size_t)buffersize] ) {
 }
 
 
@@ -56,7 +56,7 @@ ByteArray::ByteArray( uint16_t size, uint8_t* dataptr ) :
   *         filled  useful data bytes count
   *         dataptr  pointer to buffer
  */
-ByteArray::ByteArray( uint16_t size,  uint16_t filled, uint8_t* dataptr ) :
+ByteArray::ByteArray( uint16_t size, uint16_t filled, uint8_t* dataptr ) :
     _size( size ), _count( filled ), _data( dataptr ) {
 }
 

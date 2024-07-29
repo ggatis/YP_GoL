@@ -21,6 +21,7 @@
 
 enum class StatusCode {
     OK,
+    PENDING,
     ERROR
 };
 
@@ -29,9 +30,9 @@ class Pipe {
 
 public:
 
-    using ProcessorFunc = StatusCode (*)(ByteArray*, ByteArray*);
+    using ProcessorFunc = StatusCode (*)( ByteArray*, ByteArray* );
 
-    Pipe(ByteArray* pInput_data, ByteArray* pOutput_data, ProcessorFunc processor)
+    Pipe( ByteArray* pInput_data, ByteArray* pOutput_data, ProcessorFunc processor )
         : pInput_data( pInput_data ), pOutput_data( pOutput_data ), processor( processor ) {}
 
     StatusCode process() {

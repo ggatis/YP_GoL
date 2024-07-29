@@ -16,8 +16,10 @@
 
 #include "Pipe.h"
 
+//sample 1
 StatusCode reverse_processor( ByteArray* in, ByteArray* out );
 
+//sample 2
 void GoLinit( ByteArray* in, ByteArray* out );
 StatusCode GoL( ByteArray* in, ByteArray* out );
 
@@ -102,6 +104,7 @@ public:
         return nullptr;
     }
 
+    //Count pipes from 1
     StatusCode processStep( uint8_t i ) {
         if ( i > 0 && i <= pipes.size() ) {
             faultyPipe = 0;     //Reset the faulty pipe indicator
@@ -111,8 +114,8 @@ public:
             }
             return status;
         }
-        faultyPipe = i;         //Count pipes from 1
-        return StatusCode::ERROR;
+        faultyPipe = i;             //Count pipes from 1
+        return StatusCode::ERROR;   //no such a pipe
     }
 
     StatusCode processAll() {
