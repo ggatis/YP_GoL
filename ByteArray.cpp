@@ -31,7 +31,7 @@ ByteArray::ByteArray( void ) :
 /**
   * @brief  class constructor, not initialised buffer
   *
-  * @param  buffersize  buffer size
+  * @param  size  buffer size, no data
  */
 ByteArray::ByteArray( uint16_t size ) :
     _size( size ), _count( 0 ), _data( new uint8_t[(size_t)buffersize] ) {
