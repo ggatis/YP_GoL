@@ -31,7 +31,8 @@ volatile uint32_t lastS2IOtick;
 volatile uint8_t  ActiveCommand = 0;
 
 
-#include "Processors.h"
+#include "Pipeline.h"
+#include "Pipes.h"
 
 ByteArray* pRaMonBuff = nullptr;  //serial activity
 
@@ -125,22 +126,22 @@ void setupTimers( void ) {
 
 
 //dynamically allocated objects
-Processors* pProcessors     = nullptr;
-int         Iteration       = 0;
+Pipeline* pPipeline = nullptr;
+int       Iteration = 0;
 
 void setupObjects() {
 
-    //Initialize Processors object specifying the default buffer size
-    pProcessors = new Processors( width * height );
+    //Initialize Pipeline object specifying the default buffer size
+    pPipeline = new Pipeline( width * height );
 
-    //Add a GoL processor to the Processors list
-    pProcessors->AddProcessor( GoL );
+    //Add a GoL processor to the Pipeline list
+    pPipeline->AddProcessor( GoL );
 
     //init GoL
-    GoLinit( pProcessors->getFrontEnd(), pProcessors->getBackEnd() );
+    GoLinit( pPipeline->getFrontEnd(), pPipeline->getBackEnd() );
 
     printf("Iteration [0]\r\n");
-    pProcessors->getFrontEnd()->print2D( width, height );
+    pPipeline->getFrontEnd()->print2D( width, height );
 
 }
 
@@ -165,8 +166,8 @@ void setup( void ) {
 
 void clean() {
     //Delete dynamically allocated objects
-    if ( pRaMonBuff     ) delete pRaMonBuff;
-    if ( pProcessors    ) delete pProcessors;
+    if ( pRaMonBuff ) delete pRaMonBuff;
+    if ( pPipeline  ) delete pPipeline;
 }
 
 
@@ -181,12 +182,12 @@ void loop() {
 
     printf("Iteration [%d]\r\n", ++Iteration );
     
-    if ( StatusCode::OK == pProcessors->processAll() ) {
-        pProcessors->getBackEnd()->print2D( width, height );
+    if ( StatusCode::OK == pPipeline->processAll() ) {
+        pPipeline->getBackEnd()->print2D( width, height );
     } else {
-        printf("Processing failed in pipe: %d.\r\n", pProcessors->getFaultyPipe() );
+        printf("Processing failed in pipe: %d.\r\n", pPipeline->getFaultyPipe() );
     }
-    pProcessors->swapIO();
+    pPipeline->swapIO();
 
     while ( HAL_GetTick() < mySysTick ) {;};
     LEDoff();

@@ -1,5 +1,5 @@
 /**
- * @file    Reverse.h
+ * @file    Pipes.cpp
  *
  * @brief   Declaration of class Reverse
  *
@@ -11,7 +11,7 @@
  * Gatis Gaigals, 2024
  */
 
-#include "Processors.h"
+#include "Pipes.h"
 
 StatusCode reverse_processor( ByteArray* in, ByteArray* out ) {
     //Reverse the input data and store in the output data
